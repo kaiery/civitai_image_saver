@@ -1,7 +1,7 @@
 # Civitai Image Saver (CIS)
 
-[![Version](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/kaiery/civitai_image_saver)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-1.1-blue.svg)](https://github.com/kaiery/civitai_image_saver)
+[![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](LICENSE)
 
 **Civitai Image Saver** 是一款为 Civitai (C站) 用户设计的增强型油猴脚本（Userscript）。它旨在简化图片及其元数据的保存流程，让您能够轻松管理和备份在 C 站看到的优质生成作品及其生成参数。
 
@@ -69,18 +69,16 @@
 
 ## 📜 更新日志
 
+### v1.1
+
+- **🎨 UI 视觉优化**: 引入三色设计系统（成功绿、功能蓝、调试灰），界面更精美。
+- **🛡 调试模式开关**: 新增 `DEBUG_MODE` 配置，可在代码中一键切换生产/测试模式，生产环境下自动隐藏技术面板。
+- **📝 命名算法增强**: 强化了文件名清理逻辑，自动处理模型名中的非法特殊字符及控制字符。
+- **🔔 交互反馈升级**: 优化了导出成功后的弹窗提示，包含导出的条目数量及文件名。
+
 ### v1.0
 
 - 实现一键保存原图及元数据
 - 增加数据导出导入与合并功能
 - 优化 UI 三色交互效果
 - 引入状态追踪（SAVED 标记）
-
----
-
-## 🤝 贡献与反馈
-
-如果您在使用过程中遇到任何问题或有改进建议，欢迎提交 Issue。
-
-**Author**: kaiery  
-**License**: MIT

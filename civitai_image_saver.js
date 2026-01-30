@@ -1,12 +1,17 @@
 // ==UserScript==
 // @name         Civitai Image Saver
-// @namespace    local
-// @version      1.0
+// @namespace    https://github.com/kaiery/civitai_image_saver
+// @version      1.1
 // @description  一键保存 Civitai 图片及其元数据，支持导入导出和状态管理
 // @author       kaiery
 // @match        https://civitai.com/models/*
 // @run-at       document-idle
 // @grant        none
+// @license      GPL-3.0
+// @homepageURL  https://github.com/kaiery/civitai_image_saver
+// @supportURL   https://github.com/kaiery/civitai_image_saver/issues
+// @updateURL    https://github.com/kaiery/civitai_image_saver/raw/main/civitai_image_saver.user.js
+// @downloadURL  https://github.com/kaiery/civitai_image_saver/raw/main/civitai_image_saver.user.js
 // ==/UserScript==
 
 (function() {

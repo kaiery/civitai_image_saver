@@ -542,7 +542,7 @@
                                 const pureName = targetVersion.primaryFile.name.replace(/\.[^.]+$/, "");
                                 // 2.【加强版】统一替换非法字符、空格等为下划线
                                 // 正则涵盖: / \ ? % * : | " < > 以及 空格( ) 和 控制字符(\x00-\x1f)
-                                filePrefix = pureName.replace(/[/\\?%*:|"<> \x00-\x1f]+/g, '_');
+                                filePrefix = pureName.replace(/[/\\?%*:|"<>~ \x00-\x1f]+/g, '_');
                             }
                         }
                         

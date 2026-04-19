@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         Civitai Image Saver
 // @namespace    https://github.com/kaiery/civitai_image_saver
-// @version      1.1.1
+// @version      1.1.2
 // @description  一键保存 Civitai 图片及其元数据，支持导入导出和状态管理
 // @author       kaiery
 // @match        https://civitai.com/models/*
+// @match        https://civitai.red/models/*
 // @run-at       document-idle
 // @grant        none
 // @license      GPL-3.0

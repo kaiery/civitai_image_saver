@@ -43,6 +43,25 @@
     }
 
     /**
+     * 构造当前站点同源 API 地址。
+     * 这样脚本运行在 civitai.red 时，也不会去请求 civitai.com 而触发 CORS。
+     */
+    function buildApiUrl(path) {
+        return new URL(path, window.location.origin).toString();
+    }
+
+    /**
+     * 将多行提示词压平成单行，避免导出的 JSON 中出现 \n。
+     */
+    function flattenPromptText(text) {
+        if (typeof text !== 'string') return text;
+        return text
+            .replace(/\r?\n+/g, ' ')
+            .replace(/[ \t]{2,}/g, ' ')
+            .trim();
+    }
+
+    /**
      * 扫描DOM提取 modelVersionId
      * 策略：查找含有 /api/download/models/xxx 的链接
      * 优先查找包含 "Download" 文本的按钮，或者直接提取第一个匹配的下载链接
@@ -555,7 +574,7 @@
                         let currentVid = null;
                         
                         try {
-                            const genUrl = `https://civitai.com/api/trpc/image.getGenerationData?input=${encodeURIComponent(JSON.stringify({json:{id:parseInt(imageId),authed:true}}))}`;
+                            const genUrl = buildApiUrl(`/api/trpc/image.getGenerationData?input=${encodeURIComponent(JSON.stringify({json:{id:parseInt(imageId),authed:true}}))}`);
                             const resp = await fetch(genUrl);
                             const jsonBody = await resp.json();
                             
@@ -563,9 +582,15 @@
                             if (!coreData) throw new Error('API 返回结构异常');
                             
                             // 提取 meta 和 type
+                            const normalizedMeta = {
+                                ...coreData.meta,
+                                prompt: flattenPromptText(coreData.meta?.prompt),
+                                negativePrompt: flattenPromptText(coreData.meta?.negativePrompt)
+                            };
+
                             const metaDataToSave = {
                                 type: coreData.type,
-                                meta: coreData.meta
+                                meta: normalizedMeta
                             };
                             
                             // 3. 下载 JSON
@@ -696,7 +721,7 @@
         resultArea.value = `正在请求: /api/v1/models/${mid} ...`;
         
         try {
-            const resp = await fetch(`https://civitai.com/api/v1/models/${mid}`);
+            const resp = await fetch(buildApiUrl(`/api/v1/models/${mid}`));
             if (!resp.ok) throw new Error(`HTTP Error: ${resp.status}`);
             const data = await resp.json();
             

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Civitai Image Saver
 // @namespace    https://github.com/kaiery/civitai_image_saver
-// @version      1.1.3
+// @version      1.1.4
 // @description  一键保存 Civitai 图片及其元数据，支持导入导出和状态管理
 // @author       kaiery
 // @match        https://civitai.com/models/*
@@ -577,10 +577,19 @@
                             const genUrl = buildApiUrl(`/api/trpc/image.getGenerationData?input=${encodeURIComponent(JSON.stringify({json:{id:parseInt(imageId),authed:true}}))}`);
                             const resp = await fetch(genUrl);
                             const jsonBody = await resp.json();
-                            
+                            debugger
                             const coreData = jsonBody?.result?.data?.json;
                             if (!coreData) throw new Error('API 返回结构异常');
                             
+                            // 提取模型ID和版本ID，写入 JSON 并用于后续保存状态
+                            if (coreData.resources && Array.isArray(coreData.resources)) {
+                                const res = coreData.resources[0];
+                                if (res) {
+                                    if (res.modelId) currentMid = res.modelId;
+                                    if (res.versionId) currentVid = res.versionId;
+                                }
+                            }
+
                             // 提取 meta 和 type
                             const normalizedMeta = {
                                 ...coreData.meta,
@@ -590,6 +599,8 @@
 
                             const metaDataToSave = {
                                 type: coreData.type,
+                                modelId: currentMid,
+                                versionId: currentVid,
                                 meta: normalizedMeta
                             };
                             
@@ -600,15 +611,6 @@
                             );
                             
                             resultArea.value = `[${now}] JSON 元数据已保存。\n` + resultArea.value;
-
-                            // 提取模型ID和版本ID（用于后续保存状态）
-                            if (coreData.resources && Array.isArray(coreData.resources)) {
-                                const res = coreData.resources[0];
-                                if (res) {
-                                    if (res.modelId) currentMid = res.modelId;
-                                    if (res.versionId) currentVid = res.versionId;
-                                }
-                            }
 
                         } catch (err) {
                             console.error('获取元数据失败', err);

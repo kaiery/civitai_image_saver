@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name         Civitai Image Saver
 // @namespace    https://github.com/kaiery/civitai_image_saver
-// @version      1.1.4
+// @version      1.1.5
 // @description  一键保存 Civitai 图片及其元数据，支持导入导出和状态管理
 // @author       kaiery
 // @match        https://civitai.com/models/*
 // @match        https://civitai.red/models/*
+// @match        https://civitai.com/images*
+// @match        https://civitai.red/images*
 // @run-at       document-idle
 // @grant        none
 // @license      GPL-3.0
@@ -24,6 +26,7 @@
     // true  = 显示所有调试功能（扫描按钮、API测试、日志区域）
     // false = 仅显示导入导出功能（生产模式）
     const DEBUG_MODE = false;
+    const SUPPORTED_HOSTS = new Set(['civitai.com', 'civitai.red']);
 
     // ==========================================
     // 核心提取逻辑
@@ -48,6 +51,19 @@
      */
     function buildApiUrl(path) {
         return new URL(path, window.location.origin).toString();
+    }
+
+    function getImageIdFromHref(href) {
+        if (!href) return null;
+        try {
+            const url = new URL(href, window.location.origin);
+            if (!SUPPORTED_HOSTS.has(url.hostname)) return null;
+            const match = url.pathname.match(/^\/images\/(\d+)/);
+            return match ? match[1] : null;
+        } catch (e) {
+            const match = String(href).match(/\/images\/(\d+)/);
+            return match ? match[1] : null;
+        }
     }
 
     /**
@@ -477,7 +493,7 @@
 
         requestAnimationFrame(() => {
             addImageBadges.isPending = false;
-            const anchors = document.querySelectorAll('a[href^="/images/"]');
+            const anchors = document.querySelectorAll('a[href*="/images/"]');
             
             anchors.forEach(anchor => {
                 if (anchor.dataset.hasPocBadge) return;
@@ -485,10 +501,8 @@
                 const img = anchor.querySelector('img');
                 if (!img) return;
 
-                const href = anchor.getAttribute('href'); 
-                const match = href.match(/\/images\/(\d+)/);
-                if (!match) return;
-                const imageId = match[1];
+                const imageId = getImageIdFromHref(anchor.getAttribute('href'));
+                if (!imageId) return;
 
                 const src = img.src; // 预览图地址
                 

@@ -9,6 +9,7 @@
 // @match        https://civitai.com/images*
 // @match        https://civitai.red/images*
 // @match        https://civitai.red/posts/*
+// @match        https://civitai.com/posts/*
 // @run-at       document-idle
 // @grant        none
 // @license      GPL-3.0
